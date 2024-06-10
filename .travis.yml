@@ -1,147 +1,39 @@
-sudo: false
+dist: xenial
 language: python
 cache: pip
-
-matrix:
-  fast_finish: true
-  include:
-    - python: 2.7
-      env: TOXENV=py27-flake8
-    - python: 2.7
-      env: TOXENV=py27-docs
-
-    - python: 2.7
-      env: TOXENV=py27-dj18-drf31-codecov
-    - python: 2.7
-      env: TOXENV=py27-dj18-drf32-codecov
-    - python: 2.7
-      env: TOXENV=py27-dj18-drf33-codecov
-    - python: 2.7
-      env: TOXENV=py27-dj18-drf34-codecov
-    - python: 2.7
-      env: TOXENV=py27-dj18-drf35-codecov
-    - python: 2.7
-      env: TOXENV=py27-dj18-drf36-codecov
-
-    - python: 2.7
-      env: TOXENV=py27-dj19-drf31-codecov
-    - python: 2.7
-      env: TOXENV=py27-dj19-drf32-codecov
-    - python: 2.7
-      env: TOXENV=py27-dj19-drf33-codecov
-    - python: 2.7
-      env: TOXENV=py27-dj19-drf34-codecov
-    - python: 2.7
-      env: TOXENV=py27-dj19-drf35-codecov
-    - python: 2.7
-      env: TOXENV=py27-dj19-drf36-codecov
-
-    - python: 2.7
-      env: TOXENV=py27-dj110-drf34-codecov
-    - python: 2.7
-      env: TOXENV=py27-dj110-drf35-codecov
-    - python: 2.7
-      env: TOXENV=py27-dj110-drf36-codecov
-
-    - python: 2.7
-      env: TOXENV=py27-dj111-drf34-codecov
-    - python: 2.7
-      env: TOXENV=py27-dj111-drf35-codecov
-    - python: 2.7
-      env: TOXENV=py27-dj111-drf36-codecov
-
-    - python: 3.3
-      env: TOXENV=py33-dj18-drf31-codecov
-    - python: 3.3
-      env: TOXENV=py33-dj18-drf32-codecov
-    - python: 3.3
-      env: TOXENV=py33-dj18-drf33-codecov
-    - python: 3.3
-      env: TOXENV=py33-dj18-drf34-codecov
-    - python: 3.3
-      env: TOXENV=py33-dj18-drf35-codecov
-    - python: 3.3
-      env: TOXENV=py33-dj18-drf36-codecov
-
-    - python: 3.4
-      env: TOXENV=py34-dj18-drf31-codecov
-    - python: 3.4
-      env: TOXENV=py34-dj18-drf32-codecov
-    - python: 3.4
-      env: TOXENV=py34-dj18-drf33-codecov
-    - python: 3.4
-      env: TOXENV=py34-dj18-drf34-codecov
-    - python: 3.4
-      env: TOXENV=py34-dj18-drf35-codecov
-    - python: 3.4
-      env: TOXENV=py34-dj18-drf36-codecov
-
-    - python: 3.4
-      env: TOXENV=py34-dj19-drf31-codecov
-    - python: 3.4
-      env: TOXENV=py34-dj19-drf32-codecov
-    - python: 3.4
-      env: TOXENV=py34-dj19-drf33-codecov
-    - python: 3.4
-      env: TOXENV=py34-dj19-drf34-codecov
-    - python: 3.4
-      env: TOXENV=py34-dj19-drf35-codecov
-    - python: 3.4
-      env: TOXENV=py34-dj19-drf36-codecov
-
-    - python: 3.4
-      env: TOXENV=py34-dj110-drf34-codecov
-    - python: 3.4
-      env: TOXENV=py34-dj110-drf35-codecov
-    - python: 3.4
-      env: TOXENV=py34-dj110-drf36-codecov
-
-    - python: 3.4
-      env: TOXENV=py34-dj111-drf34-codecov
-    - python: 3.4
-      env: TOXENV=py34-dj111-drf35-codecov
-    - python: 3.4
-      env: TOXENV=py34-dj111-drf36-codecov
-
-    - python: 3.5
-      env: TOXENV=py35-dj110-drf34-codecov
-    - python: 3.5
-      env: TOXENV=py35-dj110-drf35-codecov
-    - python: 3.5
-      env: TOXENV=py35-dj110-drf36-codecov
-
-    - python: 3.5
-      env: TOXENV=py35-dj111-drf34-codecov
-    - python: 3.5
-      env: TOXENV=py35-dj111-drf35-codecov
-    - python: 3.5
-      env: TOXENV=py35-dj111-drf36-codecov
-
-    - python: 3.6
-      env: TOXENV=py36-dj110-drf34-codecov
-    - python: 3.6
-      env: TOXENV=py36-dj110-drf35-codecov
-    - python: 3.6
-      env: TOXENV=py36-dj110-drf36-codecov
-
-    - python: 3.6
-      env: TOXENV=py36-dj111-drf34-codecov
-    - python: 3.6
-      env: TOXENV=py36-dj111-drf35-codecov
-    - python: 3.6
-      env: TOXENV=py36-dj111-drf36-codecov
-
+python:
+  - 2.7.13
+  - 3.5
+  - 3.6
+  - 3.7
+  - 3.8
 install:
-  - pip install tox
-
+  - pip install tox-travis
 script:
   - tox
-
-after_success:
-  - |
-    if [[ "${TOXENV%-codecov}" != "$TOXENV" ]]; then
-      pip install codecov
-      flags="${TOXENV//-/ }"
-      flags="${flags//./}"
-      codecov --name $TOXENV --flags $flags
-    fi
+jobs:
+  include:
+    - stage: test
+      python: '3.6'
+      env: TOXENV=docs
+    - stage: test
+      python: '3.7'
+      env: TOXENV=manifest
+    - stage: deploy
+      python: '2.7.13'
+      env: TOXENV=py27-dj111-drf37
+      deploy:
+        provider: pypi
+        user: styria
+        password:
+          secure: HgXDXPdteDvyfZ89RAWH1b/dHNxjldtCZOLLJoALw+4GAY5vU7jlZQyV75qWMHOy4CEIkml+/v4gDox4kBKoCh5zUTwEdR6poOnoL9ikLCcNYh44xlUqdLnxZATFr8cNMiAHSExlJ7Hoq10zkvyiKVqNrqb7xEEFBwzg631Wn9HZKon7AKDOVBzC53d2jM94+iPWQ+aPQjjOghD6H9o1cAQQYf43NLc7vzj3dQYKj+BD4+2gs/Q1GMy9KMw+QPp7JutkDXtLyoEeJ1rARXlw9QU6qm83NcVQBpSyx+9gNZ1xBeFUgFJKF/77Rpv4xDP+R+6uFXIearzdoQ3P2p8OkEZJLW+YNuECbi/s/ZUmsWx8zHcX4sNauKwzrx8p+VAZ43DO8fvwKcSb3Dbi6TDhQvIMQ1znd5HbDrJJQRhJsMKwAzG3ragtjRx1yE0Eo6p7ao6RUnZrPey4oLKj1wwX/HjH0378lFEl8OCiL+ZV+WH4aEkw2HvJGUv5WG0ERcecEcCC2XZvXO9ZcfH2NjOamwJnSrWEzY0VCuf/Y9QXbuRuhimmTI704un8NGaC86HncmYwfxNzqp/NMMLlnefhmDSh2nLLSwEJlh7H/9Jv12pM/e+SNxVtzMxcRFcaeFP5Juk17cnAA/92X7PHsrfna13ARNkR7D/9+Uws84D3Xo8=
+        skip_cleanup: true
+        skip_existing: true
+        distributions: "sdist bdist_wheel"
+        on:
+          tags: true
+          branch: master
+stages:
+  - test
+  - name: deploy
+    if: tag IS present
